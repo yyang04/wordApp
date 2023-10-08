@@ -34,38 +34,22 @@
     name: 'memo'
     icon: 'table-clock'
 
+    scroll: scroll.__self__
+    answer: answer.__self__
+    memoButton: memoButton.__self__
+
     MDBoxLayout:
         id: bg
         orientation: 'vertical'
 
         MDLabel:
-            text: "Word"
+            id: word
+            text: "vanter"
             color: colors["Green"]["400"]
             md_bg_color: colors["Gray"]["900"]
             font_style: "H5"
             halign: "center"
             size_hint: 1, 0.12
-
-        MDBoxLayout:
-            id: chip_box
-            adaptive_size: True
-            spacing: "8dp"
-            size_hint: 1, 0.08
-
-            MDScreen:
-                md_bg_color: colors["Green"]["900"]
-                MDChip:
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                    text: "Elevator"
-
-            MDScreen:
-                MDChip:
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                    text: "Elevator"
-            MDScreen:
-                MDChip:
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                    text: "Elevator"
 
         Divider
 

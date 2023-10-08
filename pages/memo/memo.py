@@ -51,14 +51,15 @@ class Memo(MDBottomNavigationItem):
         self.bg.remove_widget(self.memoButton)
         self.bg.remove_widget(self.scroll)
 
-    def show_definitions(self, touch, w):
+    def show_definitions(self, touch):
+        w = self.ids.word.text
         if self.collide_point(*touch.pos):
             self.bg.remove_widget(self.hint)
             self.bg.add_widget(self.scroll)
             self.bg.add_widget(self.memoButton)
             self.ids.answer.clear_widgets()
 
-            word = self.app.get_word(w)
+            word = self.app.db.get_def(w)
             if word:
                 for definition in word.definitions:
                     posLabel = PosLabel(text=definition.pos)
@@ -71,10 +72,12 @@ class Memo(MDBottomNavigationItem):
                         senLabel = SenLabel(text=sentence.sentence)
                         self.ids.answer.add_widget(senLabel)
 
+                self.ids.answer.add_widget(MDLabel(text=""))
+
     def next_word(self):
         self.bg.add_widget(self.hint)
-        self.bg.remove_widget(self.scroll)
         self.bg.remove_widget(self.memoButton)
+        self.bg.remove_widget(self.scroll)
 
 
 
