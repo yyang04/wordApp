@@ -3,7 +3,11 @@
     icon: 'format-list-checkbox'
 
 
+
+
+<Resource>
     MDBoxLayout:
+        orientation: 'vertical'
         padding: (30, 0, 30, 0)
         spacing: 20
 
@@ -13,3 +17,15 @@
             font_name: 'Heiti'
             size_hint: 1, 0.05
             pos_hint: {'top': 1}
+
+
+        MDScrollView:
+
+            MDList:
+
+                OneLineIconListItem:
+                    text: "Book 1"
+                    on_touch_down:
+
+                    IconLeftWidget:
+                        icon: "book"

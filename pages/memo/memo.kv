@@ -1,7 +1,6 @@
 #:import colors kivymd.color_definitions.colors
 #:import Rectangle kivy.graphics
 
-
 <Divider>:
     size_hint_y: None
     height: '2dp'
@@ -31,57 +30,12 @@
     text_color: colors['LightBlue']['400']
     font_style: 'Body2'
 
-<MemoButtons>
-    size_hint: 1, 0.1
-    pos_hint: {"y": 0}
-
-    MDScreen:
-        MDRectangleFlatButton:
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            text: "认识"
-            font_name: 'Heiti'
-            theme_text_color: "Custom"
-            text_color: "green"
-            line_color: "green"
-            size_hint: 0.8, 0.2
-
-    MDScreen:
-        MDRectangleFlatButton:
-            text: "模糊"
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            font_name: 'Heiti'
-            theme_text_color: "Custom"
-            text_color: "yellow"
-            line_color: "yellow"
-            size_hint: 0.8, 0.2
-
-    MDScreen:
-        MDRectangleFlatButton:
-            text: "忘记"
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            font_name: 'Heiti'
-            theme_text_color: "Custom"
-            text_color: "red"
-            line_color: "red"
-            size_hint: 0.8, 0.2
-            on_release: root.add_definition()
-
-
-<Answer>
-    MDBoxLayout:
-        id: box
-        orientation: 'vertical'
-        padding: (10, 20, 10, 0)
-        spacing: 50
-        adaptive_height: True
-
-
 <Memo>
     name: 'memo'
     icon: 'table-clock'
 
     MDBoxLayout:
-        id: cadre
+        id: bg
         orientation: 'vertical'
 
         MDLabel:
@@ -90,7 +44,28 @@
             md_bg_color: colors["Gray"]["900"]
             font_style: "H5"
             halign: "center"
-            size_hint: 1, 0.2
+            size_hint: 1, 0.12
+
+        MDBoxLayout:
+            id: chip_box
+            adaptive_size: True
+            spacing: "8dp"
+            size_hint: 1, 0.08
+
+            MDScreen:
+                md_bg_color: colors["Green"]["900"]
+                MDChip:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    text: "Elevator"
+
+            MDScreen:
+                MDChip:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    text: "Elevator"
+            MDScreen:
+                MDChip:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    text: "Elevator"
 
         Divider
 
@@ -101,8 +76,50 @@
             font_name: 'Heiti'
             halign: 'center'
 
+        MDScrollView:
+            id: scroll
+            MDBoxLayout:
+                id: answer
+                orientation: 'vertical'
+                padding: (10, 20, 10, 0)
+                spacing: 50
+                adaptive_height: True
 
+        MDBoxLayout:
+            id: memoButton
+            size_hint: 1, 0.1
+            pos_hint: {"y": 0}
 
+            MDScreen:
+                MDRectangleFlatButton:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    text: "认识"
+                    font_name: 'Heiti'
+                    theme_text_color: "Custom"
+                    text_color: "green"
+                    line_color: "green"
+                    size_hint: 0.8, 0.2
+                    on_release: root.next_word()
 
+            MDScreen:
+                MDRectangleFlatButton:
+                    text: "模糊"
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    font_name: 'Heiti'
+                    theme_text_color: "Custom"
+                    text_color: "yellow"
+                    line_color: "yellow"
+                    size_hint: 0.8, 0.2
+                    on_release: root.next_word()
 
+            MDScreen:
+                MDRectangleFlatButton:
+                    text: "忘记"
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    font_name: 'Heiti'
+                    theme_text_color: "Custom"
+                    text_color: "red"
+                    line_color: "red"
+                    size_hint: 0.8, 0.2
+                    on_release: root.next_word()
 
