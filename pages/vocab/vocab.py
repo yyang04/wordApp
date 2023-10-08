@@ -1,31 +1,24 @@
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
-from kivymd.uix.screen import MDScreen
+
 from kivymd.uix.screenmanager import MDScreenManager
+from kivymd.uix.screen import MDScreen
 
-from pages.detail.detail import Detail
-from pages.items.items import Items
-
-
-class Resource(MDScreen):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+from pages.vocab.resc.resc import Resc
+from pages.vocab.item.item import Item
+from pages.vocab.detail.detail import Detail
 
 
 class Vocab(MDBottomNavigationItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        sm = MDScreenManager()
-        sm.add_widget(Resource())
+        self.sm = MDScreenManager()
 
-        # screens = {
-        #     'resource': Resource,
-        #     'items': Items,
-        #     'detail': Detail
-        # }
-        #
-        # for name, page in screens.items():
-        #     screen = page(name=name)
-        #     sm.add_widget(screen)
-        #
-        # sm.current = 'resource'
+        screens = {'resc': Resc,
+                   'item': Item,
+                   'detail': Detail}
+
+        for name, page in screens.items():
+            self.sm.add_widget(page(name=name))
+
+        self.add_widget(self.sm)

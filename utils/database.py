@@ -1,10 +1,11 @@
-from typing import Optional, Type
+from typing import Optional, Type, Sequence
 from sqlalchemy import create_engine, String, ForeignKey
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
+from sqlalchemy import select, func
 import logging
 from typing import List
 
@@ -83,16 +84,6 @@ class DataBase:
     def createTable(self):
         Base.metadata.create_all(self.engine)
 
-    def searchDict(self, w) -> Optional[Type[Word]]:
-        word = self.session.query(Word).filter_by(word=w).first()
-        # if word:
-        #     print(f"Word: {word.word}")
-        #     for definition in word.definitions:
-        #         print(f"Definition: {definition.definition}")
-        #         for sentence in definition.sentences:
-        #             print(f"Sentence: {sentence.sentence}")
-        return word
-
     def insert(self, instance):
         if isinstance(instance, list):
             for ins in instance:
@@ -102,11 +93,28 @@ class DataBase:
             self.session.add(instance)
             self.session.commit()
 
+    def searchDict(self, w) -> Optional[Word]:
+        stmt = select(Word).where(Word.word == w)
+        return self.session.scalars(stmt).one_or_none()
+
+    def get_resc(self):
+        stmt = select(Resource.resource, func.count(Resource.word_id)).group_by(Resource.resource)
+        return self.session.execute(stmt).all()
+
+    def get_item(self, r):
+        stmt = select(Word.word, Resource.freq).join(Word).where(Resource.resource == r).order_by(Word.word)
+        result = self.session.execute(stmt).all()
+
+        return [{'text': word, 'rtext': f"Count: {freq}"} for word, freq in result]
+
 
 if __name__ == '__main__':
-
     db = DataBase('sqlite:///../database.db')
-    db.createTable()
+    result = db.searchDict('123445')
+    a = db.get_resc()
+    b = db.get_item("Les assassins de la 5e-B.pdf")
+
+    print(1)
 
 
 

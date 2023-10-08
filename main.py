@@ -5,6 +5,7 @@ from kivy.core.text import LabelBase
 from pages.home.home import Home
 from pages.memo.memo import Memo
 from pages.vocab.vocab import Vocab
+from utils.database import DataBase
 
 
 class MainScreen(MDBottomNavigation):
@@ -18,7 +19,7 @@ class MainScreen(MDBottomNavigation):
         self.add_widget(Home())
 
 
-class Word(MDApp):
+class WordApp(MDApp):
     def build(self):
 
         self.theme_cls.material_style = "M3"  # M1/M5
@@ -26,17 +27,22 @@ class Word(MDApp):
         self.theme_cls.primary_palette = "Red"
         Window.size = (450, 900)
 
-        # 注册字体
+        # 初始化字体
         LabelBase.register(name='Heiti', fn_regular='font/STHeiti Medium.ttc')
-        # kv
-        self.load_kv("main.kv")
+
+        # 初始化kv
         self.load_kv("pages/home/home.kv")
         self.load_kv("pages/memo/memo.kv")
         self.load_kv("pages/vocab/vocab.kv")
+        self.load_kv("pages/vocab/resc/resc.kv")
+        self.load_kv("pages/vocab/item/item.kv")
+        self.load_kv("pages/vocab/detail/detail.kv")
 
+        # 初始化数据库
+        self.db = DataBase()
         return MainScreen()
 
 
 if __name__ == '__main__':
-    app = Word()
+    app = WordApp()
     app.run()

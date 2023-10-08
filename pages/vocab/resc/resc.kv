@@ -1,0 +1,25 @@
+<Resc>
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: (30, 0, 30, 0)
+        spacing: 20
+
+        MDLabel:
+            text: '词汇书'
+            halign: 'left'
+            font_name: 'Heiti'
+            size_hint: 1, 0.05
+            pos_hint: {'top': 1}
+
+
+        MDScrollView:
+            MDList:
+                id: resc
+
+
+<CTwoLineIconListItem>
+    text: "Book 1"
+    secondary_text: "Secondary text here"
+
+    IconLeftWidget:
+        icon: "book"

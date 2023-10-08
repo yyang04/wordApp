@@ -37,8 +37,7 @@ Builder.load_string(
 
         RecycleView:
             id: rv
-            key_viewclass: 'viewclass'
-            key_size: 'height'
+            viewclass: "CustomOneLineIconListItem"
 
             RecycleBoxLayout:
                 padding: dp(10)
@@ -63,10 +62,8 @@ class PreviousMDIcons(Screen):
         def add_icon_item(name_icon):
             self.ids.rv.data.append(
                 {
-                    "viewclass": "CustomOneLineIconListItem",
                     "icon": name_icon,
                     "text": name_icon,
-                    "callback": lambda x: x,
                 }
             )
 
