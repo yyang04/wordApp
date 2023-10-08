@@ -1,3 +1,44 @@
-MDBoxLayout:
-    MDLabel:
-        text: 'detail'
+
+
+<PosLabel>
+    allow_selection: True
+    theme_text_color: "Custom"
+    text_color: colors['LightBlue']['400']
+    font_style: 'Body2'
+
+
+<DefLabel>
+    allow_selection: True
+    theme_text_color: "Custom"
+    text_color: colors['LightBlue']['50']
+    font_style: 'Body1'
+
+<SenLabel>
+    allow_selection: True
+    theme_text_color: "Custom"
+    text_color: colors['LightBlue']['400']
+    font_style: 'Body2'
+
+
+<Detail>
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"x": 0, "center_y": .5}
+            on_release: root.go_previous()
+
+
+        MDLabel:
+            id: word
+            halign: 'left'
+            size_hint_y: 0.1
+
+        MDScrollView:
+            MDBoxLayout:
+                id: answer
+                orientation: 'vertical'
+                padding: (10, 20, 10, 0)
+                spacing: 50
+                adaptive_height: True

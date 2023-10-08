@@ -93,7 +93,7 @@ class DataBase:
             self.session.add(instance)
             self.session.commit()
 
-    def searchDict(self, w) -> Optional[Word]:
+    def get_def(self, w) -> Optional[Word]:
         stmt = select(Word).where(Word.word == w)
         return self.session.scalars(stmt).one_or_none()
 
@@ -102,7 +102,7 @@ class DataBase:
         return self.session.execute(stmt).all()
 
     def get_item(self, r):
-        stmt = select(Word.word, Resource.freq).join(Word).where(Resource.resource == r).order_by(Word.word)
+        stmt = select(Word.word, Resource.freq).join(Word).where(Resource.resource == r).order_by(func.lower(Word.word))
         result = self.session.execute(stmt).all()
 
         return [{'text': word, 'rtext': f"{freq}"} for word, freq in result]
@@ -110,7 +110,7 @@ class DataBase:
 
 if __name__ == '__main__':
     db = DataBase('sqlite:///../database.db')
-    result = db.searchDict('123445')
+    result = db.get_def('vanter')
     a = db.get_resc()
     b = db.get_item("Les assassins de la 5e-B.pdf")
 

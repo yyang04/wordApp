@@ -23,5 +23,6 @@ class Resc(MDScreen):
                 self.ids.resc.add_widget(item)
 
     def to_item(self, sm, data):
+        sm.transition.direction = 'left'
         sm.current = 'item'
         sm.get_screen('item').init_data(data)

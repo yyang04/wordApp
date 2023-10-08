@@ -53,6 +53,9 @@ Builder.load_string(
 class CustomOneLineIconListItem(OneLineIconListItem):
     icon = StringProperty()
 
+    def on_release(self):
+        print(self.icon)
+
 
 class PreviousMDIcons(Screen):
 
@@ -64,6 +67,7 @@ class PreviousMDIcons(Screen):
                 {
                     "icon": name_icon,
                     "text": name_icon,
+                    "callback": lambda x: print(x),
                 }
             )
 

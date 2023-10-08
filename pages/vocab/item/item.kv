@@ -5,6 +5,13 @@
 
 <Item>
     MDBoxLayout:
+        orientation: 'vertical'
+
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"x": 0, "center_y": .5}
+            on_release: root.go_previous()
+
         RecycleView:
             id: rv
             viewclass: "ListItemWithTwoText"

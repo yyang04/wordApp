@@ -9,6 +9,12 @@ from kivymd.uix.screen import MDScreen
 class ListItemWithTwoText(OneLineRightIconListItem):
     rtext = StringProperty()
 
+    def on_release(self):
+        sm = self.parent.parent.parent.parent.parent
+        sm.transition.direction = 'left'
+        sm.current = 'detail'
+        sm.get_screen('detail').init_data(self.text)
+
 
 class RightText(IRightBody, MDLabel):
     """"""
@@ -20,3 +26,9 @@ class Item(MDScreen):
 
     def init_data(self, data):
         self.ids.rv.data = data
+
+    def go_previous(self):
+        sm = self.parent
+        sm.transition.direction = 'right'
+        sm.current = sm.previous()
+
