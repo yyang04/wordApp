@@ -105,7 +105,7 @@ class DataBase:
         stmt = select(Word.word, Resource.freq).join(Word).where(Resource.resource == r).order_by(Word.word)
         result = self.session.execute(stmt).all()
 
-        return [{'text': word, 'rtext': f"Count: {freq}"} for word, freq in result]
+        return [{'text': word, 'rtext': f"{freq}"} for word, freq in result]
 
 
 if __name__ == '__main__':
