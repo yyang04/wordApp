@@ -6,6 +6,9 @@ from pages.home.home import Home
 from pages.memo.memo import Memo
 from pages.vocab.vocab import Vocab
 from utils.database import DataBase
+from utils.memory import MemoryQueue
+import json
+
 
 
 class MainScreen(MDBottomNavigation):
@@ -40,6 +43,9 @@ class WordApp(MDApp):
 
         # 初始化数据库
         self.db = DataBase()
+
+        # 初始化记忆组件
+        self.memoQ = MemoryQueue()
         return MainScreen()
 
 

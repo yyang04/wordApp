@@ -1,7 +1,6 @@
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.screen import MDScreen
 
 from pages.vocab.resc.resc import Resc
 from pages.vocab.item.item import Item

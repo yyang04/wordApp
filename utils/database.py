@@ -1,5 +1,5 @@
-from typing import Optional, Type, Sequence
-from sqlalchemy import create_engine, String, ForeignKey
+from typing import Optional, Type, Sequence, Tuple, Any
+from sqlalchemy import create_engine, String, ForeignKey, Row
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -7,7 +7,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
 from sqlalchemy import select, func
 import logging
-from typing import List
+from typing import List, Tuple
 
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.ERROR)
@@ -93,27 +93,49 @@ class DataBase:
             self.session.add(instance)
             self.session.commit()
 
-    def get_def(self, w) -> Optional[Word]:
+    def get_def(self, w: str) -> Optional[Word]:
         stmt = select(Word).where(Word.word == w)
         return self.session.scalars(stmt).one_or_none()
 
-    def get_resc(self):
-        stmt = select(Resource.resource, func.count(Resource.word_id)).group_by(Resource.resource)
+    def get_memo(self) -> Sequence[Word]:
+        stmt = (select(Word)
+                .join(Memory)
+                .where(Word.is_memorized == False)
+                .order_by(func.lower(Word.word)))
+        return self.session.scalars(stmt).all()
+
+    def get_resc(self) -> Sequence[Row[Tuple[Any, Any]]]:
+        stmt = (select(Resource.resource,
+                       func.count(Resource.word_id))
+                .group_by(Resource.resource))
         return self.session.execute(stmt).all()
 
     def get_item(self, r):
-        stmt = select(Word.word, Resource.freq).join(Word).where(Resource.resource == r).order_by(func.lower(Word.word))
+        stmt = (select(Word.word, Resource.freq)
+                .join(Word)
+                .where(Resource.resource == r)
+                .order_by(func.lower(Word.word)))
         result = self.session.execute(stmt).all()
-
         return [{'text': word, 'rtext': f"{freq}"} for word, freq in result]
+
+    def add_memo(self, r):
+        stmt = (select(Word.id, Word.word)
+                .join(Resource)
+                .where(Resource.resource == r))
+        result = self.session.execute(stmt).all()
+        memories = []
+        for word_id, word in result:
+            existing_word = self.session.scalars(select(Memory).where(Memory.word_id == word_id)).one_or_none()
+            if not existing_word:
+                memo = Memory(word_id=word_id)
+                memories.append(memo)
+        self.session.add_all(memories)
+        self.session.commit()
 
 
 if __name__ == '__main__':
     db = DataBase('sqlite:///../database.db')
     result = db.get_def('vanter')
-    a = db.get_resc()
-    b = db.get_item("Les assassins de la 5e-B.pdf")
-
     print(1)
 
 

@@ -6,7 +6,7 @@
     height: '2dp'
     canvas:
         Color:
-            rgba: 1, 1, 1, 0.5
+            rgba: 1, 1, 1, 0.1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -46,10 +46,36 @@
             id: word
             text: "vanter"
             color: colors["Green"]["400"]
-            md_bg_color: colors["Gray"]["900"]
             font_style: "H5"
+            size_hint: 1, 0.15
             halign: "center"
-            size_hint: 1, 0.12
+
+        MDBoxLayout:
+            id: freq
+            orientation: 'vertical'
+            adaptive_height: True
+
+
+            MDLabel:
+                id: freq
+                text: "在xx中出现3次"
+                font_name: 'Heiti'
+                font_size: 25
+                color: colors['Blue']["800"]
+                size_hint_y: None
+                height: self.texture_size[1] + 10
+                halign: "left"
+
+            MDLabel:
+                id: freq
+                text: "在xx中出现3次"
+                font_size: 25
+                color: colors['Blue']["800"]
+                font_name: 'Heiti'
+                size_hint_y: None
+                height: self.texture_size[1] + 10
+                halign: "left"
+
 
         Divider
 
