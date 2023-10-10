@@ -1,5 +1,6 @@
 #:import colors kivymd.color_definitions.colors
 #:import Rectangle kivy.graphics
+#:import memo utils.memory
 
 <Divider>:
     size_hint_y: None
@@ -44,7 +45,7 @@
 
         MDLabel:
             id: word
-            text: "vanter"
+            text: "finish"
             color: colors["Green"]["400"]
             font_style: "H5"
             size_hint: 1, 0.15
@@ -52,30 +53,9 @@
 
         MDBoxLayout:
             id: freq
+            padding: 10, 30
             orientation: 'vertical'
             adaptive_height: True
-
-
-            MDLabel:
-                id: freq
-                text: "在xx中出现3次"
-                font_name: 'Heiti'
-                font_size: 25
-                color: colors['Blue']["800"]
-                size_hint_y: None
-                height: self.texture_size[1] + 10
-                halign: "left"
-
-            MDLabel:
-                id: freq
-                text: "在xx中出现3次"
-                font_size: 25
-                color: colors['Blue']["800"]
-                font_name: 'Heiti'
-                size_hint_y: None
-                height: self.texture_size[1] + 10
-                halign: "left"
-
 
         Divider
 
@@ -90,6 +70,7 @@
             id: scroll
             MDBoxLayout:
                 id: answer
+                padding: 10, 30
                 orientation: 'vertical'
                 padding: (10, 20, 10, 0)
                 spacing: 50
@@ -109,7 +90,7 @@
                     text_color: "green"
                     line_color: "green"
                     size_hint: 0.8, 0.2
-                    on_release: root.next_word()
+                    on_release: root.next_word(memo.Action.memorized)
 
             MDScreen:
                 MDRectangleFlatButton:
@@ -120,7 +101,7 @@
                     text_color: "yellow"
                     line_color: "yellow"
                     size_hint: 0.8, 0.2
-                    on_release: root.next_word()
+                    on_release: root.next_word(memo.Action.blurred)
 
             MDScreen:
                 MDRectangleFlatButton:
@@ -131,5 +112,5 @@
                     text_color: "red"
                     line_color: "red"
                     size_hint: 0.8, 0.2
-                    on_release: root.next_word()
+                    on_release: root.next_word(memo.Action.forgetful)
 

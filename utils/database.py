@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
-from sqlalchemy import select, func
+from sqlalchemy import select, func, desc
 import logging
 from typing import List, Tuple
 
@@ -132,10 +132,18 @@ class DataBase:
         self.session.add_all(memories)
         self.session.commit()
 
+    def get_freq(self, w):
+        stmt = (select(Resource.resource, Resource.freq)
+                .join(Word)
+                .where(Word.word == w)
+                .order_by(desc(Resource.freq)).limit(3))
+        return self.session.execute(stmt).all()
+
 
 if __name__ == '__main__':
     db = DataBase('sqlite:///../database.db')
     result = db.get_def('vanter')
+    result = db.get_freq('abandonner')
     print(1)
 
 

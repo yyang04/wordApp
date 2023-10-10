@@ -1,10 +1,11 @@
 from kivy.uix.widget import Widget
 from kivymd.app import MDApp
+from kivymd.color_definitions import colors
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.chip import MDChip
 from kivymd.uix.label import MDLabel
-from kivymd.uix.scrollview import MDScrollView
+
+from utils.memory import Action
 
 
 class MyChip(MDChip):
@@ -14,6 +15,7 @@ class MyChip(MDChip):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
 
 class Divider(Widget):
     def __init__(self, **kwargs):
@@ -38,6 +40,17 @@ class SenLabel(MDLabel):
         self.font_name = 'Heiti'
 
 
+class FreqLabel(MDLabel):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.font_name = 'Heiti'
+        self.font_size = 25
+        self.color = colors['Blue']["800"]
+        self.size_hint_y = None
+        self.height = self.texture_size[1] + 10
+        self.halign = "left"
+
+
 class Memo(MDBottomNavigationItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -47,9 +60,7 @@ class Memo(MDBottomNavigationItem):
         self.answer = self.ids.answer
         self.memoButton = self.ids.memoButton
         self.app = MDApp.get_running_app()
-
-        self.bg.remove_widget(self.memoButton)
-        self.bg.remove_widget(self.scroll)
+        self.init_screen()
 
     def show_definitions(self, touch):
         w = self.ids.word.text
@@ -74,10 +85,24 @@ class Memo(MDBottomNavigationItem):
 
                 self.ids.answer.add_widget(MDLabel(text=""))
 
-    def next_word(self):
+    def next_word(self, action: Action):
+        self.app.memoQ.modify_memory(self.word, action)
         self.bg.add_widget(self.hint)
+        self.init_screen()
+
+    def init_screen(self):
+
         self.bg.remove_widget(self.memoButton)
         self.bg.remove_widget(self.scroll)
+        self.ids.freq.clear_widgets()
+        self.word = self.app.memoQ.pop_memory()
+        if self.word:
+            rescFreq = self.app.db.get_freq(self.word.word)
+            for resc, freq in rescFreq:
+                freqLabel = FreqLabel(text=f'在 {resc} 中出现 {freq} 次')
+                self.ids.freq.add_widget(freqLabel)
+            self.ids.word.text = self.word.word
+
 
 
 

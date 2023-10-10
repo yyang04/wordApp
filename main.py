@@ -10,6 +10,20 @@ from utils.memory import MemoryQueue
 import json
 
 
+class Config:
+    def __init__(self, file_name='config'):
+        self.file_name = file_name
+        with open(file_name, 'r') as f:
+            self.config = json.load(f)
+
+    def get_config(self, key, default):
+        return self.config.get(key, default)
+
+    def set_config(self, key, value):
+        self.config[key] = value
+        with open(self.file_name, 'w') as f:
+            json.dump(self.config, f)
+
 
 class MainScreen(MDBottomNavigation):
     use_text = False
@@ -41,12 +55,13 @@ class WordApp(MDApp):
         self.load_kv("pages/vocab/item/item.kv")
         self.load_kv("pages/vocab/detail/detail.kv")
 
-        # 初始化数据库
+        # 初始化数据库, 配置文件, 记忆组件
         self.db = DataBase()
+        self.conf = Config()
+        self.memoQ = MemoryQueue(db=self.db, conf=self.conf)
 
-        # 初始化记忆组件
-        self.memoQ = MemoryQueue()
         return MainScreen()
+
 
 
 if __name__ == '__main__':

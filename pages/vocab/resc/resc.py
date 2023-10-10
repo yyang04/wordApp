@@ -1,4 +1,3 @@
-from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.list import TwoLineAvatarIconListItem, IRightBody
@@ -20,7 +19,6 @@ class Resc(MDScreen):
         super().__init__(*args, **kwargs)
         app = MDApp.get_running_app()
         resc = app.db.get_resc()
-        self.sm = self.parent
 
         if resc:
             for name, count in resc:
@@ -30,6 +28,7 @@ class Resc(MDScreen):
                 self.ids.resc.add_widget(item)
 
     def to_item(self, data):
-        self.sm.transition.direction = 'left'
-        self.sm.current = 'item'
-        self.sm.get_screen('item').init_data(data)
+        sm = self.parent
+        sm.transition.direction = 'left'
+        sm.current = 'item'
+        sm.get_screen('item').init_data(data)

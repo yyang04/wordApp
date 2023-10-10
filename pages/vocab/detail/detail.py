@@ -1,7 +1,7 @@
 
-from kivymd.uix.screen import MDScreen
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
+from kivymd.uix.screen import MDScreen
 
 
 class PosLabel(MDLabel):
@@ -45,7 +45,7 @@ class Detail(MDScreen):
 
                 self.ids.answer.add_widget(MDLabel(text=""))
 
-    def go_previous(self):
+    def to_previous(self):
         sm = self.parent
         sm.transition.direction = 'right'
         sm.current = sm.previous()
