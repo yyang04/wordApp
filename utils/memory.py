@@ -1,7 +1,7 @@
 import random
 import time
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from enum import Enum
 from utils.database import Word
 from utils.timeop import getTimestampForDawn, getDaysBetweenTimestamp

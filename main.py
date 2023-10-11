@@ -11,7 +11,7 @@ import json
 
 
 class Config:
-    def __init__(self, file_name='config'):
+    def __init__(self, file_name='config.json'):
         self.file_name = file_name
         with open(file_name, 'r') as f:
             self.config = json.load(f)
