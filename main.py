@@ -48,6 +48,7 @@ class WordApp(MDApp):
         LabelBase.register(name='Heiti', fn_regular='font/STHeiti Medium.ttc')
 
         # 初始化kv
+        self.load_kv("pages/word.kv")
         self.load_kv("pages/home/home.kv")
         self.load_kv("pages/memo/memo.kv")
         self.load_kv("pages/vocab/vocab.kv")
