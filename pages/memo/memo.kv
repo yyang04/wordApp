@@ -1,6 +1,8 @@
 #:import colors kivymd.color_definitions.colors
 #:import Rectangle kivy.graphics
 #:import memo utils.memory
+#:import Window kivy.core.window.Window
+
 
 <Divider>:
     size_hint_y: None
@@ -48,7 +50,8 @@
             text: "finish"
             color: colors["Green"]["400"]
             font_style: "H5"
-            size_hint: 1, 0.15
+            size_hint: 1, None
+            height: Window.height * 0.15
             halign: "center"
 
         MDBoxLayout:

@@ -1,4 +1,4 @@
-from typing import Optional, Type, Sequence, Tuple, Any
+from typing import Optional, Type, Sequence, Tuple, Any, Dict, List, Union
 from sqlalchemy import create_engine, String, ForeignKey, Row
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
@@ -94,7 +94,8 @@ class DataBase:
             self.session.commit()
 
     def get_def(self, w: str) -> Optional[Word]:
-        stmt = select(Word).where(Word.word == w)
+        stmt = (select(Word)
+                .where(Word.word == w))
         return self.session.scalars(stmt).one_or_none()
 
     def get_memo(self) -> Sequence[Word]:
@@ -110,13 +111,20 @@ class DataBase:
                 .group_by(Resource.resource))
         return self.session.execute(stmt).all()
 
-    def get_item(self, r):
+    def get_item(self, r) -> List[Dict[str, str]]:
         stmt = (select(Word.word, Resource.freq)
                 .join(Word)
                 .where(Resource.resource == r)
                 .order_by(func.lower(Word.word)))
         result = self.session.execute(stmt).all()
         return [{'text': word, 'rtext': f"{freq}"} for word, freq in result]
+
+    def get_freq(self, w):
+        stmt = (select(Resource.resource, Resource.freq)
+                .join(Word)
+                .where(Word.word == w)
+                .order_by(desc(Resource.freq)).limit(3))
+        return self.session.execute(stmt).all()
 
     def add_memo(self, r):
         stmt = (select(Word.id, Word.word)
@@ -132,12 +140,22 @@ class DataBase:
         self.session.add_all(memories)
         self.session.commit()
 
-    def get_freq(self, w):
-        stmt = (select(Resource.resource, Resource.freq)
-                .join(Word)
-                .where(Word.word == w)
-                .order_by(desc(Resource.freq)).limit(3))
-        return self.session.execute(stmt).all()
+    def init_task(self):
+        self.session.query(Memory).delete()
+        self.session.commit()
+
+    def init_memo(self):
+        stmt = select(Word).where(Word.is_exposed == True)
+        words = self.session.scalars(stmt).all()
+
+        for word in words:
+            word.score = 0.0
+            word.is_memorized = False
+            word.is_exposed = False
+            word.half_life_days = 1
+
+        self.session.commit()
+
 
 
 if __name__ == '__main__':

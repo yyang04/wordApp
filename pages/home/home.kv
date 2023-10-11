@@ -1,8 +1,31 @@
+#: import Window kivy.core.window.Window
+
 <Home>
     name: 'home'
     icon: 'account'
+    BoxLayout:
+        id: bg
+        orientation: 'vertical'
+        padding: 50, 200
+        spacing: 100
 
-    MDLabel:
-        text: '我的'
-        halign: 'center'
-        font_name: 'Heiti'
+        MDRectangleFlatIconButton:
+            icon: 'alert'
+            text: "删除学习任务"
+            font_name: 'Heiti'
+            size_hint: 1, None
+            height: Window.height / 10
+            halign: "left"
+            on_release: root.init_task()
+
+
+        MDRectangleFlatIconButton:
+            icon: 'alert-box'
+            text: "初始化单词记忆"
+            font_name: 'Heiti'
+            size_hint: 1, None
+            height: Window.height / 10
+            halign: "left"
+            on_release: root.init_memo()
+
+        Widget:

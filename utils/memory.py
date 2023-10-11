@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from typing import List, Optional
 from enum import Enum
-from utils.database import Memory, Word
+from utils.database import Word
 from utils.timeop import getTimestampForDawn, getDaysBetweenTimestamp
 
 
