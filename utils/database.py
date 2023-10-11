@@ -1,4 +1,4 @@
-from typing import Optional, Type, Sequence, Tuple, Any, Dict, List, Union
+from typing import Optional, Sequence, Any, Dict
 from sqlalchemy import create_engine, String, ForeignKey, Row
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker

@@ -59,7 +59,13 @@ class Memo(MDBottomNavigationItem):
         self.scroll = self.ids.scroll
         self.answer = self.ids.answer
         self.memoButton = self.ids.memoButton
+        self.word = self.ids.word
+        self.freq = self.ids.freq
         self.app = MDApp.get_running_app()
+        self.init_screen()
+
+    def on_enter(self, *args):
+        self.app.memoQ.refresh()
         self.init_screen()
 
     def show_definitions(self, touch):
@@ -82,26 +88,32 @@ class Memo(MDBottomNavigationItem):
                     for sentence in definition.sentences:
                         senLabel = SenLabel(text=sentence.sentence)
                         self.ids.answer.add_widget(senLabel)
-
                 self.ids.answer.add_widget(MDLabel(text=""))
 
     def next_word(self, action: Action):
-        self.app.memoQ.modify_memory(self.word, action)
-        self.bg.add_widget(self.hint)
-        self.init_screen()
+        if self.memo_word:
+            self.app.memoQ.modify_memory(self.memo_word, action)
+            self.bg.add_widget(self.hint)
+            self.init_screen()
 
     def init_screen(self):
-
         self.bg.remove_widget(self.memoButton)
         self.bg.remove_widget(self.scroll)
+        self.bg.remove_widget(self.word)
+        self.bg.remove_widget(self.hint)
+        self.bg.remove_widget(self.freq)
         self.ids.freq.clear_widgets()
-        self.word = self.app.memoQ.pop_memory()
-        if self.word:
-            rescFreq = self.app.db.get_freq(self.word.word)
+        self.memo_word = self.app.memoQ.pop_memory()
+        if self.memo_word:
+            self.bg.add_widget(self.word)
+            self.bg.add_widget(self.freq)
+            rescFreq = self.app.db.get_freq(self.memo_word.word)
             for resc, freq in rescFreq:
                 freqLabel = FreqLabel(text=f'在 {resc} 中出现 {freq} 次')
                 self.ids.freq.add_widget(freqLabel)
-            self.ids.word.text = self.word.word
+            self.bg.add_widget(self.hint)
+            self.ids.word.text = self.memo_word.word
+
 
 
 

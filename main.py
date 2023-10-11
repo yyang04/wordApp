@@ -36,6 +36,7 @@ class MainScreen(MDBottomNavigation):
         self.add_widget(Home())
 
 
+
 class WordApp(MDApp):
     def build(self):
 
@@ -59,7 +60,6 @@ class WordApp(MDApp):
         self.db = DataBase()
         self.conf = Config()
         self.memoQ = MemoryQueue(db=self.db, conf=self.conf)
-
         return MainScreen()
 
 

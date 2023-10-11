@@ -24,6 +24,9 @@ class MemoryQueue:
         self.word_queue: List[Word] = []
         self.memory_decay_daily(lastUpdateTime)
 
+    def refresh(self):
+        self.word_queue: List[Word] = self.db.get_memo()
+
     @staticmethod
     def memory_decay(days, half_life_days, score):
         return int(pow(0.5, days / half_life_days) * score)
@@ -39,7 +42,7 @@ class MemoryQueue:
                 self.word_queue.append(word)
         self.db.session.commit()
 
-    def pop_memory(self) -> Optional[Word]:
+    def pop_memory(self):
         if self.word_queue:
             return self.word_queue.pop(0)
 
