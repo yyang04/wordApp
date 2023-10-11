@@ -1,5 +1,5 @@
-from typing import Optional, Sequence, Any, Dict
-from sqlalchemy import create_engine, String, ForeignKey, Row
+from typing import Optional, Sequence, Dict
+from sqlalchemy import create_engine, String, ForeignKey
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -105,7 +105,7 @@ class DataBase:
                 .order_by(func.lower(Word.word)))
         return self.session.scalars(stmt).all()
 
-    def get_resc(self) -> Sequence[Row[Tuple[Any, Any]]]:
+    def get_resc(self):
         stmt = (select(Resource.resource,
                        func.count(Resource.word_id))
                 .group_by(Resource.resource))
