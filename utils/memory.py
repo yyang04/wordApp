@@ -66,7 +66,6 @@ class MemoryQueue:
                     memo.half_life_days *= 2
                 else:
                     self._add_to_queue(memo)
-
             if action == Action.blurred:
                 memo.score += 50
                 if memo.score >= 149:
