@@ -58,9 +58,7 @@ class MemoryQueue:
             elif action == Action.forgetful:
                 memo.score += 0
                 self._add_to_queue(memo)
-
-        # 如果曝光的单词再次出现，那一定是第一轮没有认识的
-        if memo.is_exposed:
+        else:
             if action == Action.memorized:
                 memo.score += 200
                 if memo.score >= 300:
