@@ -17,12 +17,12 @@ class Home(MDBottomNavigationItem):
 
     def init_memo(self):
         self.app.db.init_memo()
-        self.app.memoQ.refresh()
+        self.app.refresh = True
         self.on_enter()
 
     def init_task(self):
         self.app.db.init_task()
-        self.app.memoQ.refresh()
+        self.app.refresh = True
         self.on_enter()
 
     def on_enter(self, *args):

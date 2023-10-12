@@ -62,10 +62,14 @@ class Memo(MDBottomNavigationItem):
         self.word = self.ids.word
         self.freq = self.ids.freq
         self.app = MDApp.get_running_app()
+        self.id = 'memoTab'
         self.init_screen()
 
     def on_enter(self, *args):
-        self.init_screen()
+        if self.app.refresh:
+            self.app.refresh = False
+            self.app.memoQ.refresh()
+            self.init_screen()
 
     def show_definitions(self, touch):
         w = self.ids.word.text

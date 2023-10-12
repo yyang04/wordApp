@@ -59,6 +59,7 @@ class WordApp(MDApp):
         self.db = DataBase()
         self.conf = Config()
         self.memoQ = MemoryQueue(db=self.db, conf=self.conf)
+        self.refresh = False
         return MainScreen()
 
 

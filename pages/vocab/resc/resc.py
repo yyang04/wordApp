@@ -35,4 +35,5 @@ class Resc(MDScreen):
 
     def icon_plus(self, name):
         self.app.db.add_memo(name)
-        self.app.memoQ.refresh()
+        self.app.refresh = True
+
