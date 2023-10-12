@@ -1,9 +1,8 @@
 from typing import Optional, Sequence, Dict
-from sqlalchemy import create_engine, String, ForeignKey
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import create_engine, String, ForeignKey, Column, Integer, Boolean, Float
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
 from sqlalchemy import select, func, desc
 import logging
@@ -13,66 +12,63 @@ logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.ERROR)
 
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 
 class Word(Base):
     __tablename__ = 'word'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    word: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    id = Column(Integer, primary_key=True)
+    word = Column(String(100), nullable=False, index=True)
 
-    definitions: Mapped[List['Definition']] = relationship(back_populates='word')  # ClassName,ColumnName
-    resources: Mapped[List['Resource']] = relationship(back_populates='word')
-    memory: Mapped['Memory'] = relationship(back_populates='word')
+    definitions = relationship("Definition", back_populates='word')  # ClassName,ColumnName
+    resources = relationship("Resource", back_populates='word')
+    memory = relationship("Memory", back_populates='word')
 
-    score: Mapped[float] = mapped_column(nullable=True, default=0.0)
-    is_exposed: Mapped[bool] = mapped_column(nullable=True, default=False)
-    is_memorized: Mapped[bool] = mapped_column(nullable=True, default=False)
-    half_life_days: Mapped[int] = mapped_column(nullable=True, default=1)
+    score = Column(Float, nullable=True, default=0.0)
+    is_exposed = Column(Boolean, nullable=True, default=False)
+    is_memorized = Column(Boolean, nullable=True, default=False)
+    half_life_days = Column(Integer, nullable=True, default=1)
 
 
 class Resource(Base):
     __tablename__ = 'resource'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    resource: Mapped[str] = mapped_column(String(100), nullable=False)
-    freq: Mapped[int] = mapped_column(nullable=True)
+    id = Column(Integer, primary_key=True)
+    resource = Column(String(100), nullable=False)
 
-    word_id: Mapped[int] = mapped_column(ForeignKey('word.id'))
-    word: Mapped['Word'] = relationship(back_populates='resources')
+    freq = Column(Integer, nullable=True)
+    word_id = Column(ForeignKey('word.id'))
+    word = relationship("Word", back_populates='resources')
 
 
 class Memory(Base):
     __tablename__ = 'memory'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id = Column(Integer, primary_key=True)
+    word_id = Column(ForeignKey('word.id'))
 
-    word_id: Mapped[int] = mapped_column(ForeignKey('word.id'))
-    word: Mapped['Word'] = relationship(back_populates='memory')
+    word = relationship("Word", back_populates='memory')
 
 
 class Definition(Base):
     __tablename__ = 'definition'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    definition: Mapped[str] = mapped_column(String(200), nullable=True)
-    pos: Mapped[str] = mapped_column(String(50), nullable=True)
-
-    word_id: Mapped[int] = mapped_column(ForeignKey('word.id'))  # tableName.columnName
-    word: Mapped['Word'] = relationship(back_populates='definitions')
-    sentences: Mapped[List['Sentence']] = relationship(back_populates='definition')
+    id = Column(Integer, primary_key=True)
+    definition = Column(String(200), nullable=True)
+    pos = Column(String(50), nullable=True)
+    word_id = Column(ForeignKey('word.id'))
+    word = relationship('Word', back_populates='definitions')
+    sentences = relationship('Sentence', back_populates='definition')
 
 
 class Sentence(Base):
     __tablename__ = 'sentence'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    sentence: Mapped[str] = mapped_column(String(200), nullable=True)
-
-    definition_id: Mapped[int] = mapped_column(ForeignKey('definition.id'))
-    definition: Mapped['Definition'] = relationship(back_populates='sentences')
+    id = Column(Integer, primary_key=True)
+    sentence = Column(String(200), nullable=True)
+    definition_id = Column(ForeignKey('definition.id'))
+    definition = relationship('Definition', back_populates='sentences')
 
 
 class User(Base):
     __tablename__ = 'user'
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id = Column(Integer, primary_key=True)
 
 
 class DataBase:
@@ -96,14 +92,14 @@ class DataBase:
     def get_def(self, w: str) -> Optional[Word]:
         stmt = (select(Word)
                 .where(Word.word == w))
-        return self.session.scalars(stmt).one_or_none()
+        return self.session.execute(stmt).scalars().one_or_none()
 
     def get_memo(self) -> Sequence[Word]:
         stmt = (select(Word)
                 .join(Memory)
                 .where(Word.is_memorized == False)
                 .order_by(func.lower(Word.word)))
-        return self.session.scalars(stmt).all()
+        return self.session.execute(stmt).scalars().all()
 
     def get_resc(self):
         stmt = (select(Resource.resource,
@@ -133,7 +129,7 @@ class DataBase:
         result = self.session.execute(stmt).all()
         memories = []
         for word_id, word in result:
-            existing_word = self.session.scalars(select(Memory).where(Memory.word_id == word_id)).one_or_none()
+            existing_word = self.session.execute(select(Memory).where(Memory.word_id == word_id)).scalars().one_or_none()
             if not existing_word:
                 memo = Memory(word_id=word_id)
                 memories.append(memo)
@@ -146,7 +142,7 @@ class DataBase:
 
     def init_memo(self):
         stmt = select(Word).where(Word.is_exposed == True)
-        words = self.session.scalars(stmt).all()
+        words = self.session.execute(stmt).scalars().all()
 
         for word in words:
             word.score = 0.0
@@ -155,7 +151,6 @@ class DataBase:
             word.half_life_days = 1
 
         self.session.commit()
-
 
 
 if __name__ == '__main__':
