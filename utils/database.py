@@ -1,11 +1,11 @@
 from typing import Optional, Sequence, Dict
 from sqlalchemy import create_engine, String, ForeignKey, Column, Integer, Boolean, Float
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 from sqlalchemy import select, func, desc
 import logging
-from typing import List, Tuple
+from typing import List
 
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.ERROR)
