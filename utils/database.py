@@ -10,7 +10,6 @@ from typing import List
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.ERROR)
 
-
 Base = declarative_base()
 
 
@@ -89,46 +88,46 @@ class DataBase:
             self.session.commit()
 
     def get_def(self, w: str) -> Optional[Word]:
-        stmt = (select(Word)
-                .where(Word.word == w))
-        return self.session.execute(stmt).scalars().one_or_none()
+        return (self.session.query(Word)
+                .filter(Word.word == w)
+                .one_or_none())
 
     def get_memo(self) -> Sequence[Word]:
-        stmt = (select(Word)
+        return (self.session.query(Word)
                 .join(Memory)
-                .where(Word.is_memorized == False)
-                .order_by(func.lower(Word.word)))
-        return self.session.execute(stmt).scalars().all()
+                .filter(Word.is_memorized == False)
+                .order_by(func.lower(Word.word)).all())
 
     def get_resc(self):
-        stmt = (select(Resource.resource,
-                       func.count(Resource.word_id))
-                .group_by(Resource.resource))
-        return self.session.execute(stmt).all()
+        return (self.session.query(Resource.resource,
+                                   func.count(Resource.word_id))
+                .group_by(Resource.resource).all())
 
     def get_item(self, r) -> List[Dict[str, str]]:
-        stmt = (select(Word.word, Resource.freq)
-                .join(Word)
-                .where(Resource.resource == r)
-                .order_by(func.lower(Word.word)))
-        result = self.session.execute(stmt).all()
-        return [{'text': word, 'rtext': f"{freq}"} for word, freq in result]
+        words = (self.session.query(Word.word, Resource.freq)
+                 .join(Resource)
+                 .filter(Resource.resource == r)
+                 .order_by(func.lower(Word.word)).all())
+        return [{'text': word, 'rtext': f"{freq}"} for word, freq in words]
 
     def get_freq(self, w):
-        stmt = (select(Resource.resource, Resource.freq)
+        return (self.session.query(Resource.resource, Resource.freq)
                 .join(Word)
-                .where(Word.word == w)
-                .order_by(desc(Resource.freq)).limit(3))
-        return self.session.execute(stmt).all()
+                .filter(Word.word == w)
+                .order_by(desc(Resource.freq))
+                .limit(3)
+                .all())
 
     def add_memo(self, r):
-        stmt = (select(Word.id, Word.word)
-                .join(Resource)
-                .where(Resource.resource == r))
-        result = self.session.execute(stmt).all()
+        words = (self.session.query(Word.id, Word.word)
+                 .join(Resource)
+                 .filter(Resource.resource == r)
+                 .all())
         memories = []
-        for word_id, word in result:
-            existing_word = self.session.execute(select(Memory).where(Memory.word_id == word_id)).scalars().one_or_none()
+        for word_id, word in words:
+            existing_word = (self.session.query(Memory)
+                             .filter(Memory.word_id == word_id)
+                             .one_or_none())
             if not existing_word:
                 memo = Memory(word_id=word_id)
                 memories.append(memo)
@@ -140,8 +139,9 @@ class DataBase:
         self.session.commit()
 
     def init_memo(self):
-        stmt = select(Word).where(Word.is_exposed == True)
-        words = self.session.execute(stmt).scalars().all()
+        words = (self.session.query(Word)
+                 .filter(Word.is_exposed == True)
+                 .all())
 
         for word in words:
             word.score = 0.0
@@ -156,9 +156,3 @@ if __name__ == '__main__':
     db = DataBase('sqlite:///../database.db')
     result = db.get_def('vanter')
     result = db.get_freq('abandonner')
-    print(1)
-
-
-
-
-
