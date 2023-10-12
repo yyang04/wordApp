@@ -38,6 +38,8 @@ class MainScreen(MDBottomNavigation):
 
 class WordApp(MDApp):
     def build(self):
+        import sqlalchemy
+        print(sqlalchemy.__version__)
 
         self.theme_cls.material_style = "M3"  # M1/M5
         self.theme_cls.theme_style = "Dark"   # Light

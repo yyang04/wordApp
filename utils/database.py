@@ -3,7 +3,6 @@ from sqlalchemy import create_engine, String, ForeignKey, Column, Integer, Boole
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import Mapped
 from sqlalchemy import select, func, desc
 import logging
 from typing import List, Tuple
