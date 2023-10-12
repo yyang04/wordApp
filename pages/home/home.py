@@ -18,16 +18,23 @@ class Home(MDBottomNavigationItem):
     def init_memo(self):
         self.app.db.init_memo()
         self.app.memoQ.refresh()
+        self.on_enter()
 
     def init_task(self):
         self.app.db.init_task()
         self.app.memoQ.refresh()
+        self.on_enter()
 
     def on_enter(self, *args):
         total, exposed, know, memorized = self.app.db.get_progress()
+        total = 0 if not total else total
+        exposed = 0 if not exposed else exposed
+        know = 0 if not know else know
+        memorized = 0 if not memorized else memorized
+
         self.ids.progress.clear_widgets()
-        self.ids.progress.add_widget(Progress(text=f"全部词汇:{total}", text_color='white'))
-        self.ids.progress.add_widget(Progress(text=f"学习词汇:{exposed}", text_color='red'))
-        self.ids.progress.add_widget(Progress(text=f"认识词汇:{know}", text_color='yellow'))
-        self.ids.progress.add_widget(Progress(text=f"记住词汇:{memorized}", text_color='green'))
+        self.ids.progress.add_widget(Progress(text=f"全部词汇:\n{total}", text_color='white'))
+        self.ids.progress.add_widget(Progress(text=f"学习词汇:\n{exposed}", text_color='red'))
+        self.ids.progress.add_widget(Progress(text=f"认识词汇:\n{know}", text_color='yellow'))
+        self.ids.progress.add_widget(Progress(text=f"记住词汇:\n{memorized}", text_color='green'))
 
