@@ -42,7 +42,6 @@ class WordApp(MDApp):
         self.theme_cls.material_style = "M3"  # M1/M5
         self.theme_cls.theme_style = "Dark"   # Light
         self.theme_cls.primary_palette = "Red"
-        Window.size = (450, 900)
 
         # 初始化字体
         LabelBase.register(name='Heiti', fn_regular='font/STHeiti Medium.ttc')
