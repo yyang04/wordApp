@@ -82,7 +82,7 @@ class MemoryQueue:
 
     def _add_to_queue(self, memo: Word):
         r = random.randint(5, 20)
-        if len(self.word_queue) < r:
+        if len(self.word_queue) >= r:
             self.word_queue.insert(r, memo)
         else:
             self.word_queue.append(memo)

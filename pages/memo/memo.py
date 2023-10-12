@@ -65,7 +65,6 @@ class Memo(MDBottomNavigationItem):
         self.init_screen()
 
     def on_enter(self, *args):
-        self.app.memoQ.refresh()
         self.init_screen()
 
     def show_definitions(self, touch):

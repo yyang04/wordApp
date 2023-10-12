@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, String, ForeignKey, Column, Integer, Boole
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
-from sqlalchemy import select, func, desc
+from sqlalchemy import func, desc, case
 import logging
 from typing import List
 
@@ -118,6 +118,17 @@ class DataBase:
                 .limit(3)
                 .all())
 
+    def get_progress(self):
+        progress = self.session.query(func.count(Word.id),
+                                      func.sum(case([(Word.is_exposed == True, 1)], else_=0)),
+                                      func.sum(case([(Word.score >= 150, 1)], else_=0)),
+                                      func.sum(case([(Word.is_memorized == True, 1)], else_=0))
+                                      ).join(Memory).one_or_none()
+        if progress:
+            return progress
+        else:
+            return 0, 0, 0, 0
+
     def add_memo(self, r):
         words = (self.session.query(Word.id, Word.word)
                  .join(Resource)
@@ -156,3 +167,5 @@ if __name__ == '__main__':
     db = DataBase('sqlite:///../database.db')
     result = db.get_def('vanter')
     result = db.get_freq('abandonner')
+    a = db.get_progress()
+    print(1)

@@ -1,5 +1,13 @@
 from kivymd.app import MDApp
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
+from kivymd.uix.label import MDLabel
+
+
+class Progress(MDLabel):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.font_name = 'Heiti'
+        self.theme_text_color = "Custom"
 
 
 class Home(MDBottomNavigationItem):
@@ -9,6 +17,17 @@ class Home(MDBottomNavigationItem):
 
     def init_memo(self):
         self.app.db.init_memo()
+        self.app.memoQ.refresh()
 
     def init_task(self):
         self.app.db.init_task()
+        self.app.memoQ.refresh()
+
+    def on_enter(self, *args):
+        total, exposed, know, memorized = self.app.db.get_progress()
+        self.ids.progress.clear_widgets()
+        self.ids.progress.add_widget(Progress(text=f"全部词汇:{total}", text_color='white'))
+        self.ids.progress.add_widget(Progress(text=f"学习词汇:{exposed}", text_color='red'))
+        self.ids.progress.add_widget(Progress(text=f"认识词汇:{know}", text_color='yellow'))
+        self.ids.progress.add_widget(Progress(text=f"记住词汇:{memorized}", text_color='green'))
+
