@@ -120,7 +120,7 @@ class DataBase:
     def get_progress(self):
         progress = self.session.query(func.count(Word.id),
                                       func.sum(case([(Word.is_exposed == True, 1)], else_=0)),
-                                      func.sum(case([(and_(Word.score < 150, Word.is_exposed == True), 1)], else_=0)),
+                                      func.sum(case([(and_(Word.score < 150, Word.is_exposed == True, Word.is_memorized == True), 1)], else_=0)),
                                       func.sum(case([(or_(Word.is_memorized == True, Word.score >= 150), 1)], else_=0))
                                       ).join(Memory).one_or_none()
         if progress:
