@@ -1,4 +1,4 @@
-from typing import Optional, Sequence, Dict
+from typing import Optional, Sequence, Dict, List, Tuple, Any
 from sqlalchemy import create_engine, String, ForeignKey, Column, Integer, Boolean, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -103,12 +103,11 @@ class DataBase:
                                    func.count(Resource.word_id))
                 .group_by(Resource.resource).all())
 
-    def get_item(self, r) -> List[Dict[str, str]]:
-        words = (self.session.query(Word.word, Resource.freq)
-                 .join(Resource)
-                 .filter(Resource.resource == r)
-                 .order_by(func.lower(Word.word)).all())
-        return [{'text': word, 'rtext': f"{freq}"} for word, freq in words]
+    def get_item(self, r) -> List[Tuple[Any, ...]]:
+        return (self.session.query(Word.word, Resource.freq, Word.is_memorized, Word.is_exposed, Word.score)
+                .join(Resource)
+                .filter(Resource.resource == r)
+                .order_by(func.lower(Word.word)).all())
 
     def get_freq(self, w):
         return (self.session.query(Resource.resource, Resource.freq)

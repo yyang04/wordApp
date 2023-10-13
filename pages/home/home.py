@@ -35,6 +35,6 @@ class Home(MDBottomNavigationItem):
         self.ids.progress.clear_widgets()
         self.ids.progress.add_widget(Progress(text=f"全部词汇:\n\n{total}", text_color='white'))
         self.ids.progress.add_widget(Progress(text=f"学习词汇:\n\n{exposed}", text_color='red'))
-        self.ids.progress.add_widget(Progress(text=f"认识词汇:\n\n{know}", text_color='yellow'))
+        self.ids.progress.add_widget(Progress(text=f"模糊词汇:\n\n{know}", text_color='yellow'))
         self.ids.progress.add_widget(Progress(text=f"记住词汇:\n\n{memorized}", text_color='green'))
 
