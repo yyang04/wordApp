@@ -96,7 +96,7 @@ class DataBase:
         return (self.session.query(Word)
                 .join(Memory)
                 .filter(Word.is_memorized == False)
-                .order_by(func.lower(Word.word)).all())
+                .order_by(desc(func.lower(Word.word))).all())
 
     def get_resc(self):
         return (self.session.query(Resource.resource,
@@ -107,7 +107,7 @@ class DataBase:
         return (self.session.query(Word.word, Resource.freq, Word.is_memorized, Word.is_exposed, Word.score)
                 .join(Resource)
                 .filter(Resource.resource == r)
-                .order_by(func.lower(Word.word)).all())
+                .order_by(desc(func.lower(Word.word))).all())
 
     def get_freq(self, w):
         return (self.session.query(Resource.resource, Resource.freq)

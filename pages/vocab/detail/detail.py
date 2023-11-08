@@ -30,19 +30,23 @@ class Detail(MDScreen):
         self.ids.answer.clear_widgets()
         word = self.app.db.get_def(w)
         self.ids.word.text = word.word
-        if word:
-            for definition in word.definitions:
-                posLabel = PosLabel(text=definition.pos)
-                self.ids.answer.add_widget(posLabel)
+        try:
+            if word:
+                for definition in word.definitions:
+                    posLabel = PosLabel(text=definition.pos)
+                    self.ids.answer.add_widget(posLabel)
 
-                defLabel = DefLabel(text=definition.definition)
-                self.ids.answer.add_widget(defLabel)
+                    defLabel = DefLabel(text=definition.definition)
+                    self.ids.answer.add_widget(defLabel)
 
-                for sentence in definition.sentences:
-                    senLabel = SenLabel(text=sentence.sentence)
-                    self.ids.answer.add_widget(senLabel)
+                    for sentence in definition.sentences:
+                        senLabel = SenLabel(text=sentence.sentence)
+                        self.ids.answer.add_widget(senLabel)
 
-                self.ids.answer.add_widget(MDLabel(text=""))
+                    self.ids.answer.add_widget(MDLabel(text=""))
+        except Exception as e:
+            pass
+
 
     def to_previous(self):
         sm = self.parent
