@@ -95,8 +95,9 @@ class DataBase:
     def get_memo(self) -> Sequence[Word]:
         return (self.session.query(Word)
                 .join(Memory)
-                .filter(Word.is_memorized == False)
-                .order_by(desc(func.lower(Word.word))).all())
+                .filter(and_(Word.is_memorized == False, Word.word < 'os'))
+                .order_by(desc(func.lower(Word.word)))
+                .all())
 
     def get_resc(self):
         return (self.session.query(Resource.resource,
